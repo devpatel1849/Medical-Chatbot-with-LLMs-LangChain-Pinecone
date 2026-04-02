@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Profile | MediCare AI</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
+	</head>
+	<body>
+		<div class="profile-shell">
+			<div class="profile-card">
+				<div class="profile-badge-row">
+					<span class="profile-badge"><i class="fas fa-id-badge"></i> Verified Account</span>
+					<span class="profile-badge"><i class="fas fa-user-cog"></i> Personal Settings</span>
+				</div>
+				<div class="profile-topbar">
+					<div>
+						<p class="profile-kicker">Account Settings</p>
+						<h1>Update Your Profile</h1>
+						<p class="profile-subtitle">Keep your identity details up to date for a more personalized assistant experience.</p>
+					</div>
+					<a href="{{ url_for('index') }}" class="back-chat-btn"><i class="fas fa-arrow-left"></i><span>Back to Chat</span></a>
+				</div>
+
+				{% if success_message %}
+				<div class="profile-status success">{{ success_message }}</div>
+				{% endif %}
+
+				{% if error_message %}
+				<div class="profile-status error">{{ error_message }}</div>
+				{% endif %}
+
+				<form method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data" class="profile-form">
+					<div class="profile-avatar-wrap">
+						{% if profile_photo_url %}
+						<img src="{{ profile_photo_url }}" class="profile-avatar" alt="Profile photo">
+						{% else %}
+						<div class="profile-avatar placeholder"><i class="fas fa-user-circle"></i></div>
+						{% endif %}
+						<label for="photo" class="photo-upload-btn"><i class="fas fa-camera"></i><span>Upload Photo</span></label>
+						<input type="file" id="photo" name="photo" accept="image/*" class="hidden-file-input">
+					</div>
+					<p class="profile-hint">Accepted photo formats: PNG, JPG, JPEG, GIF, WEBP (max 5MB).</p>
+
+					<div class="profile-grid">
+						<div class="profile-field">
+							<label for="full_name">Name</label>
+							<input type="text" id="full_name" name="full_name" value="{{ profile.full_name or '' }}" required>
+						</div>
+						<div class="profile-field">
+							<label for="mobile_no">Mobile No</label>
+							<input type="tel" id="mobile_no" name="mobile_no" value="{{ profile.mobile_no or '' }}" placeholder="e.g. +1 555 0100">
+						</div>
+						<div class="profile-field">
+							<label for="email">Email</label>
+							<input type="email" id="email" name="email" value="{{ profile.email or '' }}" placeholder="name@example.com">
+						</div>
+						<div class="profile-field">
+							<label for="gender">Gender</label>
+							<select id="gender" name="gender">
+								<option value="" {% if not profile.gender %}selected{% endif %}>Select</option>
+								<option value="Male" {% if profile.gender == 'Male' %}selected{% endif %}>Male</option>
+								<option value="Female" {% if profile.gender == 'Female' %}selected{% endif %}>Female</option>
+								<option value="Other" {% if profile.gender == 'Other' %}selected{% endif %}>Other</option>
+								<option value="Prefer not to say" {% if profile.gender == 'Prefer not to say' %}selected{% endif %}>Prefer not to say</option>
+							</select>
+						</div>
+						<div class="profile-field">
+							<label for="birthdate">Birthdate</label>
+							<input type="date" id="birthdate" name="birthdate" value="{{ profile.birthdate or '' }}">
+						</div>
+						<div class="profile-field locked-field">
+							<label for="username">Username</label>
+							<input type="text" id="username" name="username" value="{{ username }}" readonly>
+						</div>
+					</div>
+
+					<div class="profile-actions">
+						<button type="submit" class="auth-submit">Save Profile</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
